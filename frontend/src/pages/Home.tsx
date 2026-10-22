@@ -7,22 +7,34 @@ import { useCollections, useFeatured, useTestimonials } from '../api/hooks'
 import { formatINR } from '../utils/format'
 
 const collectionFallback = [
-  { slug:'gold-jewellery', title:'Gold Jewellery', desc:'22KT & 18KT heirlooms', img:'https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=800&h=800&fit=crop' },
-  { slug:'diamond-jewellery', title:'Diamond Jewellery', desc:'Certified brilliance', img:'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&h=800&fit=crop' },
-  { slug:'bridal', title:'Bridal Collection', desc:'Heirloom-worthy sets', img:'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=800&h=800&fit=crop' },
-  { slug:'earrings', title:'Earrings', desc:'Jhumkas to studs', img:'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800&h=800&fit=crop' },
-  { slug:'necklaces', title:'Necklaces', desc:'Statements & chains', img:'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&h=800&fit=crop' },
-  { slug:'rings', title:'Rings', desc:'Solitaire & bands', img:'https://images.unsplash.com/photo-1603561596112-0a132b757442?w=800&h=800&fit=crop' },
-  { slug:'bangles-bracelets', title:'Bangles & Bracelets', desc:'Kadas & cuffs', img:'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&h=800&fit=crop' },
-  { slug:'mens-jewellery', title:"Men's Jewellery", desc:'Modern & refined', img:'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=800&h=800&fit=crop' },
+  { slug:'heritage-bridal', title:'Heritage Bridal', desc:'Bridal heirlooms reimagined — Kundan & pearls', img:'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&h=800&fit=crop' },
+  { slug:'celestial-diamonds', title:'Celestial Diamonds', desc:'IGI certified solitaires, pavé shoulders', img:'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=1200&h=800&fit=crop' },
+  { slug:'everyday-elegance', title:'Everyday Elegance', desc:'Pearl chains, diamond studs, rose gold', img:'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&h=800&fit=crop' },
+  { slug:'temple-revival', title:'Temple Revival', desc:'Lakshmi & peacock motifs in 22KT', img:'https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=800&h=800&fit=crop' },
+  { slug:'noor', title:'Noor', desc:'Mughal Polki & Zambian emeralds', img:'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=1200&h=800&fit=crop' },
+  { slug:'royale-mens', title:"Royale Men's Edit", desc:'Platinum kadas & gold chains', img:'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=800&h=800&fit=crop' },
+  { slug:'navratna-gemstone', title:'Navratna & Gemstone', desc:'Nine sacred gems curated', img:'https://images.unsplash.com/photo-1603561596112-0a132b757442?w=1200&h=800&fit=crop' },
+  { slug:'festive-lights', title:'Festive Lights', desc:'Diwali & wedding lightweight edits', img:'https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=800&h=800&fit=crop' },
+]
+
+const productFallback = [
+  { id:101, name:'Maharani Temple Choker', slug:'maharani-temple-choker', sku:'OM-GLD-001', price:'185000.00', original_price:'210000.00', material:'Gold', purity:'22KT', category:1, category_name:'Gold Jewellery', is_featured:true, stock:5, discount_percent:12, in_stock:true, images:[{id:1,image:'https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=800&h=800&fit=crop',alt_text:'Maharani',is_primary:true,sort_order:0}] },
+  { id:102, name:'Celestial Solitaire Ring', slug:'celestial-solitaire-ring', sku:'OM-DIA-002', price:'245000.00', original_price:'285000.00', material:'Gold & Diamond', purity:'18KT', category:1, category_name:'Rings', is_featured:true, stock:8, discount_percent:14, in_stock:true, images:[{id:2,image:'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=800&h=800&fit=crop',alt_text:'Solitaire',is_primary:true,sort_order:0}] },
+  { id:103, name:'Noor Emerald Jhumkas', slug:'noor-emerald-jhumkas', sku:'OM-GEM-003', price:'89000.00', original_price:'105000.00', material:'Gold & Diamond', purity:'18KT', category:1, category_name:'Earrings', is_featured:true, stock:12, discount_percent:15, in_stock:true, images:[{id:3,image:'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&h=800&fit=crop',alt_text:'Jhumkas',is_primary:true,sort_order:0}] },
+  { id:104, name:'Heritage Bridal Necklace Set', slug:'heritage-bridal-necklace-set', sku:'OM-BRD-005', price:'485000.00', original_price:'550000.00', material:'Gold & Diamond', purity:'22KT', category:1, category_name:'Bridal', is_featured:true, stock:3, discount_percent:12, in_stock:true, images:[{id:4,image:'https://images.unsplash.com/photo-1603561596112-0a132b757442?w=800&h=800&fit=crop',alt_text:'Bridal',is_primary:true,sort_order:0}] },
+  { id:105, name:'Diamond Tennis Bracelet', slug:'diamond-tennis-bracelet', sku:'OM-DIA-006', price:'165000.00', original_price:null, material:'Diamond', purity:'18KT', category:1, category_name:'Bracelets', is_featured:true, stock:7, discount_percent:0, in_stock:true, images:[{id:5,image:'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&h=800&fit=crop',alt_text:'Tennis',is_primary:true,sort_order:0}] },
+  { id:106, name:'Polki Diamond Choker', slug:'polki-diamond-choker', sku:'OM-DIA-010', price:'195000.00', original_price:'225000.00', material:'Gold & Diamond', purity:'18KT', category:1, category_name:'Necklaces', is_featured:true, stock:4, discount_percent:13, in_stock:true, images:[{id:6,image:'https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=800&h=800&fit=crop',alt_text:'Polki',is_primary:true,sort_order:0}] },
+  { id:107, name:'Classic Gold Mangalsutra', slug:'classic-gold-mangalsutra', sku:'OM-GLD-015', price:'58000.00', original_price:null, material:'Gold', purity:'22KT', category:1, category_name:'Necklaces', is_featured:true, stock:12, discount_percent:0, in_stock:true, images:[{id:7,image:'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800&h=800&fit=crop',alt_text:'Mangalsutra',is_primary:true,sort_order:0}] },
+  { id:108, name:'Cocktail Gemstone Ring', slug:'cocktail-gemstone-ring', sku:'OM-GEM-032', price:'115000.00', original_price:'135000.00', material:'Gemstone', purity:'18KT', category:1, category_name:'Rings', is_featured:true, stock:4, discount_percent:15, in_stock:true, images:[{id:8,image:'https://images.unsplash.com/photo-1603561596112-0a132b757442?w=800&h=800&fit=crop',alt_text:'Cocktail',is_primary:true,sort_order:0}] },
 ]
 
 export default function Home(){
   const {data:collData} = useCollections()
-  const {data:featData} = useFeatured()
+  const {data:featData, isError:featError} = useFeatured()
   const {data:testiData} = useTestimonials()
-  const collections = (collData?.results||[]).length ? collData.results.map((c:any)=> ({slug:c.slug, title:c.title, desc:c.short_description||c.description, img:'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&h=800&fit=crop'})) : collectionFallback
-  const products = featData?.results || featData?.slice?.(0,8) || []
+  const collections = (collData?.results && collData.results.length > 0) ? collData.results.map((c:any)=> ({slug:c.slug, title:c.title, desc:c.short_description||c.description, img: c.image || 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&h=800&fit=crop'})) : collectionFallback
+  const rawProducts = featData?.results || (Array.isArray(featData) ? featData : null) || []
+  const products = rawProducts.length > 0 ? rawProducts : (featError ? productFallback : [])
   const testimonials = testiData?.results || testiData || []
 
   return (
@@ -68,7 +80,7 @@ export default function Home(){
             <Link to="/shop" className="bg-obsidian text-pearl rounded-full px-6 py-2.5 text-sm">Shop All</Link>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mt-8">
-            {products.length ? products.map((p:any,i:number)=> <ProductCard key={p.id} product={p} index={i} />) : [1,2,3,4].map(i=> <div key={i} className="h-[360px] bg-white rounded-[18px] animate-pulse" />)}
+            {products.length ? products.map((p:any,i:number)=> <ProductCard key={p.id} product={p} index={i} />) : productFallback.map((p:any,i:number)=> <ProductCard key={p.id} product={p as any} index={i} />)}
           </div>
         </div>
       </section>
