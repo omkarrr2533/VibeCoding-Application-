@@ -32,6 +32,8 @@ INSTALLED_APPS = [
     'apps.coupons',
     'apps.content',
     'apps.newsletter',
+    'apps.analytics',
+    'apps.shipping',
     'apps.core',
 ]
 

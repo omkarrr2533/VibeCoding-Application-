@@ -1,10 +1,11 @@
 import { useParams, Link, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useProduct } from '../api/hooks'
 import { formatINR } from '../utils/format'
 import { Heart, Share2, Truck, Shield, RotateCcw } from 'lucide-react'
 import { useAddToCart } from '../api/hooks'
 import { toast } from '../components/Toaster'
+import { pushRecentlyViewed } from '../components/RecentlyViewed'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { api } from '../api/client'
 
@@ -24,6 +25,12 @@ export default function ProductDetail(){
   const reviews=useQuery({ queryKey:['reviews',slug], queryFn: async()=>(await api.get(`/products/${slug}/reviews/`)).data, enabled: !!slug })
 
   if(isLoading) return <div className="max-w-[1600px] mx-auto px-6 md:px-10 py-10"><div className="h-[520px] bg-white animate-pulse rounded-[22px]" /></div>
+  // track recently viewed
+  useEffect(()=>{
+    if(product){
+      pushRecentlyViewed({slug: product.slug, name: product.name, image: product.images?.[0]?.image, price: product.price})
+    }
+  },[product?.slug])
   if(!product) return <div className="p-10 text-center">Product not found. <Link to="/shop" className="underline">Back to shop</Link></div>
 
   const imgList = product.images?.length ? product.images : [{image:'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=1200&h=1200&fit=crop', alt_text: product.name}]
@@ -110,17 +117,21 @@ export default function ProductDetail(){
             <div className="flex-1 bg-white border border-obsidian/5 rounded-2xl p-4 text-sm flex gap-3"><Shield size={18}/> <span>Authenticity note<br/><span className="text-xs opacity-60">When applicable</span></span></div>
           </div>
 
-          {/* pincode */}
+          {/* pincode — live API */}
           <div className="mt-6 bg-ivory rounded-2xl p-5">
-            <div className="text-sm font-medium">Delivery availability</div>
+            <div className="text-sm font-medium">Delivery availability (live)</div>
             <div className="flex gap-2 mt-2">
-              <input value={pincode} onChange={e=>setPincode(e.target.value)} placeholder="Enter pincode" className="flex-1 border border-obsidian/15 rounded-full px-4 py-2.5 bg-white" />
-              <button onClick={()=>{
-                if(pincode.length===6) setPinMsg(`Great! Delivery available to ${pincode}. COD available where eligible.`)
-                else setPinMsg('Please enter a valid 6-digit pincode.')
+              <input value={pincode} onChange={e=>setPincode(e.target.value)} placeholder="Enter pincode (try 411001 Pune)" className="flex-1 border border-obsidian/15 rounded-full px-4 py-2.5 bg-white" />
+              <button onClick={async()=>{
+                if(pincode.length!==6) {setPinMsg('Please enter valid 6-digit pincode'); return}
+                try{
+                  const {data}=await api.get(`/shipping/check/`,{params:{pincode}})
+                  setPinMsg(`✓ ${data.city} — ${data.serviceable?'Serviceable':'Not serviceable'} • COD ${data.cod?'Available':'Not available'} • ${data.estimated_delivery} • Shipping ${data.shipping_cost===0?'Free':`₹${data.shipping_cost}`}`)
+                }catch(err:any){ setPinMsg(err.response?.data?.detail||'Check failed')}
               }} className="bg-obsidian text-pearl rounded-full px-6">Check</button>
             </div>
             {pinMsg && <div className="text-xs mt-2 opacity-70">{pinMsg}</div>}
+            <div className="text-xs opacity-60 mt-2">Powered by live pincode serviceability API — integrates with Shiprocket/Delhivery in production. Try: 411001, 400001, 110001</div>
           </div>
 
           <div className="mt-6 grid grid-cols-2 gap-3 text-sm">

@@ -7,6 +7,7 @@ A production-oriented luxury jewellery showroom with cinematic storytelling, ele
 Live Preview (when servers running via `npm run dev` + Django):
 - Frontend: `http://localhost:5173` (proxies `/api` → Django)
 - Backend: `http://localhost:8000/api/v1/` • Admin: `http://localhost:8000/admin/` • Docs: `http://localhost:8000/api/docs/`
+- **Deploy-ready:** Docker Compose (Postgres + Redis + Nginx + Gunicorn), `render.yaml` (Render), `railway.toml` (Railway), `vercel.json` (Vercel), CI via GitHub Actions, `settings_prod.py` with WhiteNoise & S3, healthchecks, backup scripts — see `deployment/README.md`
 
 ---
 
@@ -26,15 +27,23 @@ Live Preview (when servers running via `npm run dev` + Django):
 ### Pages (all responsive, loading/empty/error states)
 Home, Shop All, Collection Listing/Details, Product Details, Search, Wishlist, Cart, Checkout, Register, Login, Account Dashboard, Order History/Details, About, Contact, Care Guide, FAQ, Shipping & Returns, Privacy, Terms, Custom Inquiry, Order Tracking, 404.
 
+### 📊 Extensive Database (Production-Ready Seed)
+- **32 luxury products** across 10 categories, 8 collections — Gold, Diamond, Bridal, Silver, Men's, Gifting, with BIS hallmark & IGI certification notes
+- **Variants:** Ring sizes 5-9, bangle sizes 2.2-2.8, metal finishes (yellow/rose/white), temple vs polished
+- **Full metadata:** SKU, weight, purity, dimensions, care instructions, specifications, SEO meta, stock tracking
+- **12 testimonials, 40+ reviews** (verified purchase flags), 6 coupons (WELCOME10, FESTIVE500, BRIDAL15 etc.), 4 demo users (demo/priya/arjun/manager), addresses, sample delivered order
+- **Live data:** Analytics dashboard (total products/orders/revenue/users/subscribers) from real DB queries — no fake metrics
+- **Shipping API:** Pincode serviceability (411001 Pune, 110001 Delhi etc.), COD check, cost, ETA via `/api/v1/shipping/check/`
+
 ### E-Commerce
-- **Product Detail:** gallery/zoom, 3D teaser, SKU, price INR, material/purity/weight/dimensions, variants, stock, add-to-cart/buy-now/wishlist, pincode check, specs, care, reviews, related & recently-viewed.
+- **Product Detail:** gallery/zoom, 3D teaser, SKU, price INR, material/purity/weight/dimensions, variants, stock, add-to-cart/buy-now/wishlist, **live pincode check via shipping API**, specs, care, reviews, related & recently-viewed (localStorage).
 - **Cart:** add/remove/qty, variant support, subtotal/tax (3% GST)/shipping, coupon (WELCOME10 10%, FESTIVE500 ₹500), backend-calculated totals, persisted for auth users + guest session_key.
 - **Checkout:** shipping/billing, Razorpay test mode: server-side order creation → Razorpay order → frontend handler → backend signature verification → webhook idempotency; never marks paid from frontend alone; handles failed/cancelled/retry/duplicate.
 - **Orders:** snapshot of names/variants/prices, inventory locking via transaction, ownership checks, tracking steps.
 
 ### Backend
 - **Stack:** Python 3.11, Django 5.0, DRF 3.15, SimpleJWT, PostgreSQL-ready (SQLite dev), corsheaders, django-filter, drf-spectacular, Pillow, Razorpay, pytest.
-- **Apps:** accounts, catalog, collections_app (via catalog), cart, orders, payments, reviews, wishlist, coupons, content, newsletter, core.
+- **Apps:** accounts, catalog, cart, orders, payments, reviews, wishlist, coupons, content, newsletter, core, **analytics** (live dashboard), **shipping** (pincode serviceability)
 - **Admin:** full Django Admin for products/variants/images, categories/collections, inventory, orders fulfillment, payment reconciliation, coupons, inquiries, reviews moderation, homepage/announcement, newsletter, settings, shipping/tax.
 - **Pricing Service:** fixed price stored; configurable service for weight/purity/gemstone/market-rate — with documented provider hooks, timestamps, fallback (no fake live rates).
 
@@ -108,6 +117,8 @@ backend/
 - `GET /products/{slug}/reviews/`, `POST /products/{slug}/reviews/`, `GET /reviews/`
 - `POST /contact/`, `POST /custom-inquiry/`, `GET /announcements/`, `GET /homepage/`, `GET /site-settings/`, `GET /testimonials/`
 - `POST /newsletter/subscribe/`, `POST /coupons/validate/`
+- `GET /shipping/check/?pincode=411001`, `GET /shipping/rates/` (COD, ETA, cost — integrate Shiprocket/Delhivery in prod)
+- `GET /analytics/dashboard/` (admin-only, live revenue/orders/users)
 - `GET /health/`, `GET /sitemap.xml`, `GET /robots.txt`, `GET /schema/`, `GET /docs/`
 
 All documented via Swagger/OpenAPI at `/api/docs/`.
