@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* { scrollbar-width: thin; scrollbar-color: #D4AF72 #F8F3EA; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Manrope', Inter, sans-serif; background: #FFFCF7; color: #11100E; -webkit-font-smoothing: antialiased; }
+h1,h2,h3,h4 { font-family: 'Cormorant Garamond', 'Playfair Display', serif; letter-spacing: -0.02em; }
+::selection { background: #D4AF72; color: #11100E; }
+
+/* reveal */
+.reveal { opacity:0; transform: translateY(18px); transition: all 0.9s cubic-bezier(0.16,1,0.3,1); }
+.reveal.in { opacity:1; transform: translateY(0); }
+
+/* custom scrollbar hide */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
