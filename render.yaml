@@ -1,0 +1,39 @@
+services:
+  - type: web
+    name: oms-jewellers-backend
+    env: python
+    plan: starter
+    buildCommand: pip install -r backend/requirements.txt && python backend/manage.py collectstatic --no-input
+    startCommand: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --chdir backend
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings_prod
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: False
+      - key: DATABASE_URL
+        fromDatabase:
+          name: oms-db
+          property: connectionString
+      - key: ALLOWED_HOSTS
+        value: oms-jewellers-backend.onrender.com
+      - key: FRONTEND_URL
+        value: https://oms-jewellers.onrender.com
+    healthCheckPath: /api/v1/health/
+
+  - type: web
+    name: oms-jewellers-frontend
+    env: static
+    plan: starter
+    buildCommand: npm install && npm run build
+    staticPublishPath: frontend/dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://oms-jewellers-backend.onrender.com/api/v1
+
+databases:
+  - name: oms-db
+    plan: starter
+    databaseName: omjewellers
+    user: omuser

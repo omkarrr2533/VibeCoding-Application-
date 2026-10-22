@@ -14,6 +14,7 @@ import { Login, Register } from './pages/Auth'
 import Account from './pages/Account'
 import OrderDetail from './pages/OrderDetail'
 import Tracking from './pages/Tracking'
+import Analytics from './pages/Analytics'
 import { About, Contact, CustomInquiry, CareGuide, FAQ, ShippingReturns, Privacy, Terms, NotFound } from './pages/Static'
 
 const qc=new QueryClient()
@@ -38,6 +39,7 @@ export default function App(){
             <Route path="account" element={<Account />} />
             <Route path="order/:id" element={<OrderDetail />} />
             <Route path="track-order" element={<Tracking />} />
+            <Route path="analytics" element={<Analytics />} />
             <Route path="about" element={<About />} />
             <Route path="contact" element={<Contact />} />
             <Route path="custom-inquiry" element={<CustomInquiry />} />

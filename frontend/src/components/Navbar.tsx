@@ -82,6 +82,7 @@ export default function Navbar(){
             {navLinks.slice(5).map(l=>(
               <NavLink key={l.label} to={l.to} className="text-[11px] tracking-[0.14em] uppercase font-medium opacity-80 hover:opacity-100">{l.label}</NavLink>
             ))}
+            <NavLink to="/analytics" className="text-[11px] tracking-[0.14em] uppercase font-medium opacity-80 hover:opacity-100">Analytics</NavLink>
           </div>
 
           {/* actions */}
